@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --bg: #f5f4f0;
@@ -39,12 +47,18 @@
     }
 
     .logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      letter-spacing: -0.5px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #1a1714;
     }
 
-    .logo span { color: var(--accent); }
+    .logo span {
+      color: #fcbacb;
+      /* same pink as index */
+    }
 
     .step-indicator {
       margin-left: auto;
@@ -55,9 +69,21 @@
       color: var(--muted);
     }
 
-    .step { padding: 4px 12px; border-radius: 20px; font-weight: 500; }
-    .step.done { background: var(--accent-light); color: var(--accent); }
-    .step.active { background: var(--ink); color: #fff; }
+    .step {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .step.done {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .step.active {
+      background: var(--ink);
+      color: #fff;
+    }
 
     main {
       flex: 1;
@@ -95,7 +121,11 @@
       margin-bottom: 20px;
     }
 
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
 
     .field {
       display: flex;
@@ -110,7 +140,9 @@
       color: var(--muted);
     }
 
-    .field input, .field select, .field textarea {
+    .field input,
+    .field select,
+    .field textarea {
       border: 1.5px solid var(--border);
       border-radius: 10px;
       padding: 12px 14px;
@@ -123,12 +155,17 @@
       width: 100%;
     }
 
-    .field input:focus, .field select:focus, .field textarea:focus {
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
       border-color: var(--accent);
       background: #fff;
     }
 
-    .field textarea { resize: none; height: 80px; }
+    .field textarea {
+      resize: none;
+      height: 80px;
+    }
 
     /* UPI Section */
     .upi-wrap {
@@ -147,11 +184,23 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .upi-option:last-child { border-bottom: none; }
-    .upi-option:hover { background: var(--bg); }
-    .upi-option.selected { background: var(--accent-light); }
+    .upi-option:last-child {
+      border-bottom: none;
+    }
 
-    .upi-option input[type="radio"] { accent-color: var(--accent); width: 17px; height: 17px; }
+    .upi-option:hover {
+      background: var(--bg);
+    }
+
+    .upi-option.selected {
+      background: var(--accent-light);
+    }
+
+    .upi-option input[type="radio"] {
+      accent-color: var(--accent);
+      width: 17px;
+      height: 17px;
+    }
 
     .upi-logo {
       width: 36px;
@@ -165,14 +214,42 @@
       letter-spacing: -0.5px;
     }
 
-    .upi-logo.gpay { background: #fff; border: 1px solid #e5e4e0; color: #1a73e8; }
-    .upi-logo.phonepe { background: #5f259f; color: #fff; }
-    .upi-logo.paytm { background: #00BAF2; color: #fff; }
-    .upi-logo.other { background: var(--bg); color: var(--ink); border: 1px solid var(--border); }
+    .upi-logo.gpay {
+      background: #fff;
+      border: 1px solid #e5e4e0;
+      color: #1a73e8;
+    }
 
-    .upi-label { flex: 1; }
-    .upi-label strong { display: block; font-size: 15px; font-weight: 500; }
-    .upi-label small { color: var(--muted); font-size: 12px; }
+    .upi-logo.phonepe {
+      background: #5f259f;
+      color: #fff;
+    }
+
+    .upi-logo.paytm {
+      background: #00BAF2;
+      color: #fff;
+    }
+
+    .upi-logo.other {
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .upi-label {
+      flex: 1;
+    }
+
+    .upi-label strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .upi-label small {
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     .upi-id-field {
       padding: 16px 20px;
@@ -181,7 +258,9 @@
       display: none;
     }
 
-    .upi-id-field.show { display: block; }
+    .upi-id-field.show {
+      display: block;
+    }
 
     /* Order Summary */
     .order-item {
@@ -192,7 +271,9 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .order-item:last-child { border-bottom: none; }
+    .order-item:last-child {
+      border-bottom: none;
+    }
 
     .item-thumb {
       width: 52px;
@@ -207,10 +288,25 @@
       flex-shrink: 0;
     }
 
-    .item-info { flex: 1; }
-    .item-info .name { font-size: 14px; font-weight: 500; }
-    .item-info .qty { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .item-price { font-size: 15px; font-weight: 500; }
+    .item-info {
+      flex: 1;
+    }
+
+    .item-info .name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .item-info .qty {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .item-price {
+      font-size: 15px;
+      font-weight: 500;
+    }
 
     .summary-line {
       display: flex;
@@ -249,8 +345,13 @@
       gap: 8px;
     }
 
-    .btn-pay:hover { background: #2563eb; }
-    .btn-pay:active { transform: scale(0.98); }
+    .btn-pay:hover {
+      background: #2563eb;
+    }
+
+    .btn-pay:active {
+      transform: scale(0.98);
+    }
 
     .secure-note {
       display: flex;
@@ -279,7 +380,9 @@
       outline: none;
     }
 
-    .coupon-row input:focus { border-color: var(--accent); }
+    .coupon-row input:focus {
+      border-color: var(--accent);
+    }
 
     .coupon-row button {
       padding: 10px 18px;
@@ -293,268 +396,348 @@
       transition: all 0.2s;
     }
 
-    .coupon-row button:hover { background: var(--ink); color: #fff; }
+    .coupon-row button:hover {
+      background: var(--ink);
+      color: #fff;
+    }
 
     /* Animations */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .card { animation: fadeUp 0.4s ease both; }
-    .card:nth-child(2) { animation-delay: 0.08s; }
-    .card:nth-child(3) { animation-delay: 0.16s; }
-    .sidebar > * { animation: fadeUp 0.4s ease both; animation-delay: 0.2s; }
+    .card {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    .sidebar>* {
+      animation: fadeUp 0.4s ease both;
+      animation-delay: 0.2s;
+    }
 
     @media (max-width: 780px) {
-      main { grid-template-columns: 1fr; }
-      .row { grid-template-columns: 1fr; }
-      header { padding: 16px 20px; }
-      .step-indicator { display: none; }
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 16px 20px;
+      }
+
+      .step-indicator {
+        display: none;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">store<span>.</span></div>
-  <div class="step-indicator">
-    <span class="step done">Cart</span>
-    <span style="color:#ddd">›</span>
-    <span class="step active">Checkout</span>
-    <span style="color:#ddd">›</span>
-    <span class="step">Confirm</span>
-  </div>
-</header>
+  <header>
+    <div class="logo">DRE<span>A</span>MIFY</div>
+    <div class="step-indicator">
+      <span class="step done">Cart</span>
+      <span style="color:#ddd">›</span>
+      <span class="step active">Checkout</span>
+      <span style="color:#ddd">›</span>
+      <span class="step">Confirm</span>
+    </div>
+  </header>
 
-<main>
-  <div class="left-col">
-    <form id="checkoutForm" action="backend.html" method="POST">
+  <main>
+    <div class="left-col">
+      <form id="checkoutForm" action="backend.html" method="POST">
 
-      <!-- Personal Info -->
+        <!-- Personal Info -->
+        <div class="card">
+          <div class="section-title">Personal Information</div>
+          <div class="row">
+            <div class="field">
+              <label>First Name</label>
+              <input type="text" name="first_name" placeholder="Add Your Name Here" required />
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <input type="text" name="last_name" placeholder="Add Your Last Name Here" required />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="Add Your Email Here" required />
+            </div>
+            <div class="field">
+              <label>Phone</label>
+              <input type="tel" name="phone" placeholder="Add Your Phone Number Here" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="card">
+          <div class="section-title">Delivery Address</div>
+          <div class="field">
+            <label>Street Address</label>
+            <input type="text" name="address_line1" placeholder="House No., Street, Area" required />
+          </div>
+          <div class="field">
+            <label>Landmark (Optional)</label>
+            <input type="text" name="landmark" placeholder="Near Metro Station" />
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>City</label>
+              <input type="text" name="city" placeholder="mumbai" required />
+            </div>
+            <div class="field">
+              <label>State</label>
+              <select name="state" required>
+                <option value="">Select State</option>
+                <option value="RJ" selected>Maharashtra</option>
+                <option value="DL">Delhi</option>
+                <option value="MH">Maharashtra</option>
+                <option value="GJ">Gujarat</option>
+                <option value="KA">Karnataka</option>
+                <option value="TN">Tamil Nadu</option>
+                <option value="UP">Uttar Pradesh</option>
+                <option value="WB">West Bengal</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>PIN Code</label>
+              <input type="text" name="pincode" placeholder="302001" maxlength="6" required />
+            </div>
+            <div class="field">
+              <label>Delivery Note</label>
+              <input type="text" name="note" placeholder="Leave at door, ring bell, etc." />
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="card">
+          <div class="section-title">Payment — UPI</div>
+          <div class="upi-wrap">
+
+            <label class="upi-option" id="gpay-opt">
+              <input type="radio" name="upi_method" value="gpay" onchange="handleUPI(this)" />
+              <div class="upi-logo gpay">G</div>
+              <div class="upi-label">
+                <strong>Google Pay</strong>
+                <small>Pay via GPay UPI</small>
+              </div>
+            </label>
+
+            <label class="upi-option" id="phonepe-opt">
+              <input type="radio" name="upi_method" value="phonepe" onchange="handleUPI(this)" />
+              <div class="upi-logo phonepe">Pe</div>
+              <div class="upi-label">
+                <strong>PhonePe</strong>
+                <small>Pay via PhonePe UPI</small>
+              </div>
+            </label>
+
+            <label class="upi-option" id="paytm-opt">
+              <input type="radio" name="upi_method" value="paytm" onchange="handleUPI(this)" />
+              <div class="upi-logo paytm">Pt</div>
+              <div class="upi-label">
+                <strong>Paytm</strong>
+                <small>Pay via Paytm UPI</small>
+              </div>
+            </label>
+
+            <label class="upi-option" id="other-opt">
+              <input type="radio" name="upi_method" value="other" onchange="handleUPI(this)" />
+              <div class="upi-logo other">UPI</div>
+              <div class="upi-label">
+                <strong>Other UPI App</strong>
+                <small>Enter your UPI ID manually</small>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="upi-id-field" id="upiIdField">
+            <div class="field" style="margin-bottom:0">
+              <label>Enter UPI ID</label>
+              <input type="text" name="upi_id" id="upiId" placeholder="yourname@upi" />
+            </div>
+          </div>
+
+          <input type="hidden" name="order_id" value="ORD-20260228-001" />
+          <input type="hidden" name="total_amount" id="totalHidden" value="1598" />
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Order Summary Sidebar -->
+    <div class="sidebar">
       <div class="card">
-        <div class="section-title">Personal Information</div>
-        <div class="row">
-          <div class="field">
-            <label>First Name</label>
-            <input type="text" name="first_name" placeholder="Add Your Name Here" required />
+        <div class="section-title">Order Summary</div>
+
+        <div id="orderItems"></div>
+
+        <div style="margin-top: 20px;">
+          <div class="coupon-row">
+            <input type="text" placeholder="Coupon code" id="couponInput" />
+            <button type="button" onclick="applyCoupon()">Apply</button>
           </div>
-          <div class="field">
-            <label>Last Name</label>
-            <input type="text" name="last_name" placeholder="Add Your Last Name Here" required />
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span id="subtotalDisplay">₹0</span>
           </div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Add Your Email Here" required />
+
+          <div class="summary-line">
+            <span>Delivery</span>
+            <span id="deliveryCharge">₹200</span>
           </div>
-          <div class="field">
-            <label>Phone</label>
-            <input type="tel" name="phone" placeholder="Add Your Phone Number Here" required />
+
+          <div class="summary-line total">
+            <span>Total</span>
+            <span id="totalDisplay">₹0</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Delivery Address -->
-      <div class="card">
-        <div class="section-title">Delivery Address</div>
-        <div class="field">
-          <label>Street Address</label>
-          <input type="text" name="address_line1" placeholder="House No., Street, Area" required />
-        </div>
-        <div class="field">
-          <label>Landmark (Optional)</label>
-          <input type="text" name="landmark" placeholder="Near Metro Station" />
-        </div>
-        <div class="row">
-          <div class="field">
-            <label>City</label>
-            <input type="text" name="city" placeholder="mumbai" required />
-          </div>
-          <div class="field">
-            <label>State</label>
-            <select name="state" required>
-              <option value="">Select State</option>
-              <option value="RJ" selected>Maharashtra</option>
-              <option value="DL">Delhi</option>
-              <option value="MH">Maharashtra</option>
-              <option value="GJ">Gujarat</option>
-              <option value="KA">Karnataka</option>
-              <option value="TN">Tamil Nadu</option>
-              <option value="UP">Uttar Pradesh</option>
-              <option value="WB">West Bengal</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label>PIN Code</label>
-            <input type="text" name="pincode" placeholder="302001" maxlength="6" required />
-          </div>
-          <div class="field">
-            <label>Delivery Note</label>
-            <input type="text" name="note" placeholder="Leave at door, ring bell, etc." />
-          </div>
-        </div>
-      </div>
-
-      <!-- Payment -->
-      <div class="card">
-        <div class="section-title">Payment — UPI</div>
-        <div class="upi-wrap">
-
-          <label class="upi-option" id="gpay-opt">
-            <input type="radio" name="upi_method" value="gpay" onchange="handleUPI(this)" />
-            <div class="upi-logo gpay">G</div>
-            <div class="upi-label">
-              <strong>Google Pay</strong>
-              <small>Pay via GPay UPI</small>
-            </div>
-          </label>
-
-          <label class="upi-option" id="phonepe-opt">
-            <input type="radio" name="upi_method" value="phonepe" onchange="handleUPI(this)" />
-            <div class="upi-logo phonepe">Pe</div>
-            <div class="upi-label">
-              <strong>PhonePe</strong>
-              <small>Pay via PhonePe UPI</small>
-            </div>
-          </label>
-
-          <label class="upi-option" id="paytm-opt">
-            <input type="radio" name="upi_method" value="paytm" onchange="handleUPI(this)" />
-            <div class="upi-logo paytm">Pt</div>
-            <div class="upi-label">
-              <strong>Paytm</strong>
-              <small>Pay via Paytm UPI</small>
-            </div>
-          </label>
-
-          <label class="upi-option" id="other-opt">
-            <input type="radio" name="upi_method" value="other" onchange="handleUPI(this)" />
-            <div class="upi-logo other">UPI</div>
-            <div class="upi-label">
-              <strong>Other UPI App</strong>
-              <small>Enter your UPI ID manually</small>
-            </div>
-          </label>
 
         </div>
 
-        <div class="upi-id-field" id="upiIdField">
-          <div class="field" style="margin-bottom:0">
-            <label>Enter UPI ID</label>
-            <input type="text" name="upi_id" id="upiId" placeholder="yourname@upi" />
-          </div>
+        <button class="btn-pay" onclick="submitOrder()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="1" y="4" width="22" height="16" rx="2" />
+            <path d="M1 10h22" />
+          </svg>
+          Pay ₹1,598
+        </button>
+
+        <div class="secure-note">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          Secured with 256-bit SSL encryption
         </div>
-
-        <input type="hidden" name="order_id" value="ORD-20260228-001" />
-        <input type="hidden" name="total_amount" id="totalHidden" value="1598" />
-      </div>
-
-    </form>
-  </div>
-
-  <!-- Order Summary Sidebar -->
-  <div class="sidebar">
-    <div class="card">
-      <div class="section-title">Order Summary</div>
-
-      <div class="order-item">
-        <div class="item-thumb">💍</div>
-        <div class="item-info">
-          <div class="name">Resin Ring</div>
-          <div class="qty">Qty: 1 · Size: 9</div>
-        </div>
-        <div class="item-price">₹999</div>
-      </div>
-
-      <div class="order-item">
-        <div class="item-thumb">🖼️</div>
-        <div class="item-info">
-          <div class="name">Resin Mini Frame</div>
-          <div class="qty">Qty: 1</div>
-        </div>
-        <div class="item-price">₹399</div>
-      </div>
-
-      <div style="margin-top: 20px;">
-        <div class="coupon-row">
-          <input type="text" placeholder="Coupon code" id="couponInput" />
-          <button type="button" onclick="applyCoupon()">Apply</button>
-        </div>
-        <div class="summary-line"><span>Subtotal</span><span>₹1,398</span></div>
-        <div class="summary-line"><span>Delivery</span><span>₹200</span></div>
-        <div class="summary-line" id="discountLine" style="display:none;color:var(--success)"><span>Discount</span><span id="discountAmt">-₹0</span></div>
-        <div class="summary-line total"><span>Total</span><span id="totalDisplay">₹1,598</span></div>
-      </div>
-
-      <button class="btn-pay" onclick="submitOrder()">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-        Pay ₹1,598
-      </button>
-
-      <div class="secure-note">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Secured with 256-bit SSL encryption
       </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<script>
-  function handleUPI(radio) {
-    document.querySelectorAll('.upi-option').forEach(el => el.classList.remove('selected'));
-    radio.closest('.upi-option').classList.add('selected');
-    const field = document.getElementById('upiIdField');
-    const upiInput = document.getElementById('upiId');
-    if (radio.value === 'other') {
-      field.classList.add('show');
-      upiInput.required = true;
-    } else {
-      field.classList.remove('show');
-      upiInput.required = false;
-    }
-  }
-
-  function applyCoupon() {
-    const code = document.getElementById('couponInput').value.trim().toUpperCase();
-    const discountLine = document.getElementById('discountLine');
-    const discountAmt = document.getElementById('discountAmt');
-    const totalDisplay = document.getElementById('totalDisplay');
-    const totalHidden = document.getElementById('totalHidden');
-    const btn = document.querySelector('.btn-pay');
-
-    if (code === 'SAVE100') {
-      discountLine.style.display = 'flex';
-      discountAmt.textContent = '-₹100';
-      totalDisplay.textContent = '₹1,498';
-      totalHidden.value = '1498';
-      btn.innerHTML = btn.innerHTML.replace(/Pay ₹[\d,]+/, 'Pay ₹1,498');
-      alert('Coupon applied! ₹100 off.');
-    } else if (code) {
-      alert('Invalid coupon code.');
-    }
-  }
-
-  function submitOrder() {
-    const form = document.getElementById('checkoutForm');
-    const upiMethod = document.querySelector('input[name="upi_method"]:checked');
-
-    if (!upiMethod) {
-      alert('Please select a UPI payment method.');
-      return;
+  <script>
+    function handleUPI(radio) {
+      document.querySelectorAll('.upi-option').forEach(el => el.classList.remove('selected'));
+      radio.closest('.upi-option').classList.add('selected');
+      const field = document.getElementById('upiIdField');
+      const upiInput = document.getElementById('upiId');
+      if (radio.value === 'other') {
+        field.classList.add('show');
+        upiInput.required = true;
+      } else {
+        field.classList.remove('show');
+        upiInput.required = false;
+      }
     }
 
-    if (form.checkValidity()) {
-      form.submit();
-    } else {
-      form.reportValidity();
+    function applyCoupon() {
+      const code = document.getElementById('couponInput').value.trim().toUpperCase();
+      const discountLine = document.getElementById('discountLine');
+      const discountAmt = document.getElementById('discountAmt');
+      const totalDisplay = document.getElementById('totalDisplay');
+      const totalHidden = document.getElementById('totalHidden');
+      const btn = document.querySelector('.btn-pay');
+
+      if (code === 'SAVE100') {
+        discountLine.style.display = 'flex';
+        discountAmt.textContent = '-₹100';
+        totalDisplay.textContent = '₹1,498';
+        totalHidden.value = '1498';
+        btn.innerHTML = btn.innerHTML.replace(/Pay ₹[\d,]+/, 'Pay ₹1,498');
+        alert('Coupon applied! ₹100 off.');
+      } else if (code) {
+        alert('Invalid coupon code.');
+      }
     }
-  }
-</script>
+
+    function submitOrder() {
+      const form = document.getElementById('checkoutForm');
+      const upiMethod = document.querySelector('input[name="upi_method"]:checked');
+
+      if (!upiMethod) {
+        alert('Please select a UPI payment method.');
+        return;
+      }
+
+      if (form.checkValidity()) {
+        form.submit();
+      } else {
+        form.reportValidity();
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const container = document.getElementById("orderItems");
+
+      let subtotal = 0;
+      const delivery = 200;
+
+      container.innerHTML = "";
+
+      cart.forEach(item => {
+
+        const itemTotal = item.price * item.qty;
+        subtotal += itemTotal;
+
+        container.innerHTML += `
+      <div class="order-item">
+        <div class="item-thumb">
+          <img src="${item.img}" 
+               style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+        </div>
+        <div class="item-info">
+          <div class="name">${item.name}</div>
+          <div class="qty">Qty: ${item.qty}</div>
+        </div>
+        <div class="item-price">₹${itemTotal}</div>
+      </div>
+    `;
+      });
+
+      // Update totals correctly
+      document.getElementById("subtotalDisplay").innerText = "₹" + subtotal;
+      document.getElementById("totalDisplay").innerText = "₹" + (subtotal + delivery);
+
+      // Update Pay button text
+      document.querySelector(".btn-pay").innerHTML = `
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <rect x="1" y="4" width="22" height="16" rx="2"/>
+      <path d="M1 10h22"/>
+    </svg>
+    Pay ₹${subtotal + delivery}
+  `;
+
+    });
+  </script>
 
 </body>
+
 </html>

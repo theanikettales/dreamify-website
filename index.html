@@ -668,6 +668,10 @@
 
 <script>
   function goToCheckout() {
+  // Save cart in localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // Go to checkout page
   window.location.href = "checkout.html";
 }
   // CURSOR
@@ -688,12 +692,12 @@
 
   // PRODUCTS DATA
   const products = [
-    { id: 1, name: 'Resin Ring', material: 'Sterling Silver', price: 48, emoji: '💍', tag: 'New', category: 'rings', img: 'img/resin-ring.jpeg' },
-    { id: 2, name: 'Floral Oxidised Earrings', material: 'Bold florals', price: 64, emoji: '✨', tag: 'Bestseller', category: 'earrings', img: 'img/Floral Oxidised Earrings.jpeg' },
-    { id: 3, name: 'Teardrop Resin Pendant', material: '(Silver Chain', price: 86, emoji: '⭐', tag: null, category: 'necklaces', img: 'img/Teardrop-Resin-Pendant.jpeg' },
-    { id: 4, name: 'Rose Preservation earrings', material: 'Sterling Silver', price: 38, emoji: '🪨', tag: 'New', category: 'earrings', img: 'img/Rose Preservation in earrings.jpeg' },
-    { id: 5, name: 'Resin keychain', material: 'Hammered Brass', price: 72, emoji: '🟡', tag: null, category: 'bracelets', img: 'img/resin-keychain.jpeg' },
-    { id: 6, name: 'Celeste Ring', material: 'Rose Gold-filled', price: 56, emoji: '🌙', tag: 'Bestseller', category: 'rings', img: 'img/resin-ring2.jpeg' },
+    { id: 1, name: 'Resin Ring', material: 'Sterling Silver', price: 599, emoji: '💍', tag: 'New', category: 'rings', img: 'img/resin-ring.jpeg' },
+    { id: 2, name: 'Floral Oxidised Earrings', material: 'Bold florals', price: 1099, emoji: '✨', tag: 'Bestseller', category: 'earrings', img: 'img/Floral Oxidised Earrings.jpeg' },
+    { id: 3, name: 'Teardrop Resin Pendant', material: '(Silver Chain', price: 699, emoji: '⭐', tag: null, category: 'necklaces', img: 'img/Teardrop-Resin-Pendant.jpeg' },
+    { id: 4, name: 'Rose Preservation earrings', material: 'Sterling Silver', price: 1299, emoji: '🪨', tag: 'New', category: 'earrings', img: 'img/Rose Preservation in earrings.jpeg' },
+    { id: 5, name: 'Resin keychain', material: 'Hammered Brass', price: 320, emoji: '🟡', tag: null, category: 'bracelets', img: 'img/resin-keychain.jpeg' },
+    { id: 6, name: 'Celeste Ring', material: 'Rose Gold-filled', price: 499, emoji: '🌙', tag: 'Bestseller', category: 'rings', img: 'img/resin-ring2.jpeg' },
   ];
 
   let cart = [];
@@ -711,7 +715,7 @@
         </div>
         <p class="product-name">${p.name}</p>
         <p class="product-material">${p.material}</p>
-        <p class="product-price">$${p.price}</p>
+        <p class="product-price">₹${p.price}</p>
       </div>
     `).join('');
 
@@ -756,7 +760,7 @@
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const count = cart.reduce((s, i) => s + i.qty, 0);
     document.getElementById('cartCount').textContent = count;
-    document.getElementById('cartTotal').textContent = `$${total}`;
+    document.getElementById('cartTotal').textContent = `₹${total}`;
     renderCartItems();
   }
 
@@ -773,7 +777,7 @@
           <p class="cart-item-name">${item.name} ${item.qty > 1 ? `×${item.qty}` : ''}</p>
           <p class="cart-item-material">${item.material}</p>
           <div class="cart-item-bottom">
-            <span class="cart-item-price">$${item.price * item.qty}</span>
+            <span class="cart-item-price">₹${item.price * item.qty}</span>
             <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
           </div>
         </div>
