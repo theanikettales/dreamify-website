@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Confirmed — Backend</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --card: #ffffff;
+      --ink: #1a1a1a;
+      --muted: #888;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e5e4e0;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .success-card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .check-circle {
+      width: 72px;
+      height: 72px;
+      background: var(--success-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: pop 0.4s ease 0.3s both;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .check-circle svg { color: var(--success); }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .order-ref {
+      display: inline-block;
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 32px;
+    }
+
+    .detail-table {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .detail-row {
+      display: flex;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-row .key {
+      color: var(--muted);
+      width: 140px;
+      flex-shrink: 0;
+      font-weight: 400;
+    }
+
+    .detail-row .val {
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .upi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .total-row {
+      background: var(--success-light);
+    }
+
+    .total-row .key { color: var(--success); }
+    .total-row .val { color: var(--success); font-size: 16px; }
+
+    .btn-back {
+      display: inline-block;
+      padding: 13px 32px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .btn-back:hover { background: var(--accent); }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      margin-bottom: 32px;
+      color: var(--muted);
+      letter-spacing: -0.3px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    /* ─── Backend / Developer Info Panel ─── */
+    .dev-panel {
+      max-width: 520px;
+      width: 100%;
+      margin-top: 24px;
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 24px 28px;
+      text-align: left;
+      animation: fadeUp 0.5s ease 0.2s both;
+      color: #a8b4d8;
+      font-size: 13px;
+    }
+
+    .dev-panel .dev-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #5c6bc0;
+      margin-bottom: 16px;
+    }
+
+    .dev-panel pre {
+      background: #111122;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      color: #81c784;
+      font-family: 'Courier New', monospace;
+    }
+
+    .dev-panel .comment { color: #546e7a; }
+    .dev-panel .key-col { color: #64b5f6; }
+    .dev-panel .val-col { color: #a5d6a7; }
+
+    .note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #5c6bc0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="logo">store<span>.</span></div>
+
+<div class="success-card">
+  <div class="check-circle">
+    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+
+  <h1>Order Confirmed!</h1>
+  <p class="subtitle">Thank you for your purchase. Your order has been placed and payment is being processed via UPI.</p>
+
+  <div class="order-ref" id="orderRef">Order ID: ORD-20260228-001</div>
+
+  <div class="detail-table" id="detailTable">
+    <!-- Populated by JS -->
+  </div>
+
+  <a href="checkout.html" class="btn-back">← Back to Checkout</a>
+</div>
+
+<!-- Developer / Backend Info -->
+<div class="dev-panel">
+  <div class="dev-title">⚙ Backend — Received POST Data</div>
+  <pre id="postData"><span class="comment">// Form data received from checkout.html</span>
+<span class="comment">// In a real backend (Node.js / PHP / Python), parse req.body</span>
+
+<span class="key-col">Loading form data...</span></pre>
+  <p class="note">
+    This page simulates a backend handler. In production, connect this to your server (Node.js/Express, PHP, Django, etc.) to process the UPI payment via Razorpay, PayU, or Cashfree gateway and update your database.
+  </p>
+</div>
+
+<script>
+  // Simulate reading POST data from URL params (for demo since we're static HTML)
+  // In real backend: const data = req.body; (Express) or $_POST (PHP)
+
+  const params = new URLSearchParams(window.location.search);
+
+  // Demo data if no POST params available
+  const orderData = {
+    order_id:      params.get('order_id')     || 'ORD-20260228-001',
+    first_name:    params.get('first_name')   || 'Sapna',
+    last_name:     params.get('last_name')    || 'Pal',
+    email:         params.get('email')        || 'sapna@email.com',
+    phone:         params.get('phone')        || '+91 98765 43210',
+    address_line1: params.get('address_line1')|| '12, MG Road, Bani Park',
+    city:          params.get('city')         || 'Mumbai',
+    state:         params.get('state')        || 'maharashtra',
+    pincode:       params.get('pincode')      || '302001',
+    upi_method:    params.get('upi_method')   || 'gpay',
+    upi_id:        params.get('upi_id')       || '—',
+    total_amount:  params.get('total_amount') || '1598',
+  };
+
+  // Update Order ID display
+  document.getElementById('orderRef').textContent = 'Order ID: ' + orderData.order_id;
+
+  // Build detail table
+  const upiLabels = { gpay: 'Google Pay', phonepe: 'PhonePe', paytm: 'Paytm', other: 'Other UPI' };
+  const rows = [
+    ['Customer',     orderData.first_name + ' ' + orderData.last_name],
+    ['Email',        orderData.email],
+    ['Phone',        orderData.phone],
+    ['Address',      orderData.address_line1 + ', ' + orderData.city + ', ' + orderData.state + ' - ' + orderData.pincode],
+    ['Payment',      `<span class="upi-badge">UPI · ${upiLabels[orderData.upi_method] || 'UPI'}</span>`],
+    ['UPI ID',       orderData.upi_id !== '—' ? orderData.upi_id : 'Via App'],
+  ];
+
+  const table = document.getElementById('detailTable');
+  rows.forEach(([k, v]) => {
+    const row = document.createElement('div');
+    row.className = 'detail-row';
+    row.innerHTML = `<span class="key">${k}</span><span class="val">${v}</span>`;
+    table.appendChild(row);
+  });
+
+  // Total row
+  const totalRow = document.createElement('div');
+  totalRow.className = 'detail-row total-row';
+  totalRow.innerHTML = `<span class="key">Total Paid</span><span class="val">₹${parseInt(orderData.total_amount).toLocaleString('en-IN')}</span>`;
+  table.appendChild(totalRow);
+
+  // Show POST data in dev panel
+  const prettyData = Object.entries(orderData)
+    .map(([k, v]) => `<span class="key-col">"${k}"</span>: <span class="val-col">"${v}"</span>`)
+    .join(',\n');
+
+  document.getElementById('postData').innerHTML =
+    `<span class="comment">// POST /backend.html — Received at ${new Date().toLocaleTimeString()}</span>\n{\n${prettyData}\n}`;
+</script>
+
+</body>
+</html>

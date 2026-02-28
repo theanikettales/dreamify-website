@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREAMIFY — Handmade Jewelry</title>
+<link rel="stylesheet" href="styles.css" class="sr">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #faf8f5;
+    --warm-white: #f5f2ed;
+    --gold: #c9a96e;
+    --gold-light: #e8d5b0;
+    --dark: #1a1714;
+    --mid: #6b6460;
+    --border: #e0dbd4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* CURSOR */
+  body { cursor: none; }
+  .cursor {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    width: 8px; height: 8px; background: var(--gold);
+    border-radius: 50%; transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+  .cursor.hover { width: 40px; height: 40px; background: transparent; border: 1px solid var(--gold); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    background: rgba(250,248,245,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s;
+  }
+  nav.scrolled { border-color: var(--border); }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; letter-spacing: 0.3em;
+    text-transform: uppercase; text-decoration: none; color: var(--dark);
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--mid); font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-right { display: flex; gap: 24px; align-items: center; }
+  .cart-btn {
+    background: none; border: none; cursor: none;
+    font-family: 'Jost', sans-serif; font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--dark); display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s;
+  }
+  .cart-btn:hover { color: var(--gold); }
+  .cart-count {
+    width: 18px; height: 18px; background: var(--gold); color: white;
+    border-radius: 50%; font-size: 0.65rem; display: flex;
+    align-items: center; justify-content: center;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 90px;
+    opacity: 0; animation: fadeUp 1.2s ease 0.2s forwards;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 60px 80px 60px;
+  }
+  .hero-tag {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 28px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: 300; line-height: 1.05;
+    margin-bottom: 28px;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    font-size: 0.85rem; color: var(--mid); line-height: 1.9;
+    max-width: 340px; margin-bottom: 52px;
+    font-weight: 300;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 16px;
+    text-decoration: none; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dark); border-bottom: 1px solid var(--gold);
+    padding-bottom: 8px; transition: gap 0.3s, color 0.3s;
+  }
+  .hero-cta:hover { gap: 24px; color: var(--gold); }
+  .hero-right {
+    background: var(--warm-white);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-image-wrapper {
+    width: 70%; aspect-ratio: 3/4;
+    background: linear-gradient(145deg, #e8d5b0 0%, #c9a96e33 40%, #f5f2ed 100%);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.08);
+  }
+  .hero-image-wrapper::before {
+    content: '';
+    position: absolute; inset: -1px;
+    border: 1px solid var(--gold-light);
+    border-radius: 2px;
+  }
+  .hero-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem; color: var(--gold-light);
+    opacity: 0.6; line-height: 1;
+    user-select: none;
+  }
+  .hero-badge {
+    position: absolute; bottom: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: var(--dark); border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 2px;
+  }
+  .hero-badge span:first-child {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; color: var(--gold);
+  }
+  .hero-badge span:last-child {
+    font-size: 0.55rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--cream); opacity: 0.7;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden; border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0; background: var(--warm-white);
+  }
+  .marquee {
+    display: flex; gap: 60px; width: max-content;
+    animation: scroll 20s linear infinite;
+  }
+  .marquee span {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--mid); white-space: nowrap;
+  }
+  .marquee span.gold { color: var(--gold); }
+
+  /* SECTION */
+  section { padding: 100px 60px; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.1;
+    margin-bottom: 60px;
+  }
+
+  /* PRODUCTS */
+  .product-image {
+  width: 70%;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+  z-index: 1;
+  position: relative;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.08);
+}
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px;
+  }
+  .product-card {
+    cursor: none;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .product-card.visible { opacity: 1; transform: translateY(0); }
+  .product-card:nth-child(2) { transition-delay: 0.1s; }
+  .product-card:nth-child(3) { transition-delay: 0.2s; }
+  .product-card:nth-child(4) { transition-delay: 0.3s; }
+  .product-card:nth-child(5) { transition-delay: 0.4s; }
+  .product-card:nth-child(6) { transition-delay: 0.5s; }
+
+  .product-img {
+    aspect-ratio: 3/4;
+    background: var(--warm-white);
+    position: relative; overflow: hidden;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .product-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(26,23,20,0);
+    transition: background 0.4s;
+  }
+  .product-card:hover .product-img::after { background: rgba(26,23,20,0.04); }
+  .product-emoji {
+    font-size: 4rem; transition: transform 0.5s ease;
+    z-index: 1; position: relative;
+  }
+  .product-card:hover .product-emoji { transform: scale(1.08); }
+  .product-tag-badge {
+    position: absolute; top: 16px; left: 16px;
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    background: var(--dark); color: var(--cream);
+    padding: 4px 10px; z-index: 2;
+  }
+  .quick-add {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--dark); color: var(--cream);
+    border: none; padding: 14px; cursor: none;
+    font-family: 'Jost', sans-serif; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    transform: translateY(100%); transition: transform 0.35s ease;
+    z-index: 2;
+  }
+  .product-card:hover .quick-add { transform: translateY(0); }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 400; margin-bottom: 6px;
+  }
+  .product-material {
+    font-size: 0.7rem; color: var(--mid);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .product-price {
+    font-size: 0.85rem; color: var(--gold); letter-spacing: 0.05em;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px;
+    background: var(--dark); color: var(--cream);
+    padding: 16px 24px; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.4s ease; z-index: 9998;
+    border-left: 2px solid var(--gold);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ABOUT */
+  .about-section {
+    background: var(--dark); color: var(--cream);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center;
+  }
+  .about-label { color: var(--gold); }
+  .about-title { color: var(--cream); }
+  .about-text {
+    font-size: 0.85rem; color: rgba(255,255,255,0.55);
+    line-height: 2; margin-bottom: 32px;
+  }
+  .about-link {
+    text-decoration: none; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); border-bottom: 1px solid var(--gold);
+    padding-bottom: 4px; display: inline-block;
+    transition: opacity 0.3s;
+  }
+  .about-link:hover { opacity: 0.7; }
+  .about-visual {
+    aspect-ratio: 1; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10rem; color: rgba(201,169,110,0.2);
+  }
+
+  /* FEATURES */
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .feature {
+    padding: 60px 40px; background: var(--cream);
+    text-align: center;
+  }
+  .feature-icon { font-size: 1.8rem; margin-bottom: 20px; }
+  .feature-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; margin-bottom: 12px; font-weight: 400;
+  }
+  .feature-desc { font-size: 0.8rem; color: var(--mid); line-height: 1.8; }
+
+  /* NEWSLETTER */
+  .newsletter { text-align: center; padding: 100px 60px; }
+  .newsletter .section-label { display: block; margin-bottom: 16px; }
+  .newsletter .section-title { margin-bottom: 12px; }
+  .newsletter-sub {
+    font-size: 0.85rem; color: var(--mid); margin-bottom: 48px;
+  }
+  .nl-form { display: flex; max-width: 420px; margin: 0 auto; gap: 0; }
+  .nl-input {
+    flex: 1; padding: 16px 20px;
+    border: 1px solid var(--border); border-right: none;
+    background: transparent; font-family: 'Jost', sans-serif;
+    font-size: 0.8rem; color: var(--dark); outline: none;
+  }
+  .nl-input::placeholder { color: var(--mid); }
+  .nl-btn {
+    padding: 16px 28px; background: var(--dark); color: var(--cream);
+    border: 1px solid var(--dark); cursor: none;
+    font-family: 'Jost', sans-serif; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nl-btn:hover { background: var(--gold); border-color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    padding: 60px 60px 40px;
+    border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-brand .logo { display: block; margin-bottom: 16px; }
+  .footer-tagline { font-size: 0.8rem; color: var(--mid); line-height: 1.8; max-width: 220px; }
+  .footer-col h4 {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dark); margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    text-decoration: none; font-size: 0.8rem;
+    color: var(--mid); transition: color 0.3s;
+  }
+  .footer-col ul li a:hover { color: var(--gold); }
+  .footer-bottom {
+    margin-top: 60px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+    grid-column: 1 / -1;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p { font-size: 0.7rem; color: var(--mid); letter-spacing: 0.05em; }
+
+  /* CART DRAWER */
+  .cart-overlay {
+    position: fixed; inset: 0; background: rgba(26,23,20,0.5);
+    opacity: 0; pointer-events: none; z-index: 200;
+    transition: opacity 0.4s;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 400px;
+    background: var(--cream); z-index: 201;
+    transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+    display: flex; flex-direction: column;
+    padding: 40px 32px;
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .cart-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400;
+  }
+  .cart-close {
+    background: none; border: none; cursor: none;
+    font-size: 1.2rem; color: var(--mid); transition: color 0.3s;
+  }
+  .cart-close:hover { color: var(--dark); }
+  .cart-items { flex: 1; overflow-y: auto; }
+  .cart-empty {
+    text-align: center; padding: 60px 0;
+    font-size: 0.8rem; color: var(--mid); line-height: 2;
+  }
+  .cart-item {
+    display: flex; gap: 16px; padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cart-item-img {
+    width: 70px; height: 90px; background: var(--warm-white);
+    display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; margin-bottom: 4px;
+  }
+  .cart-item-material { font-size: 0.7rem; color: var(--mid); margin-bottom: 12px; }
+  .cart-item-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .cart-item-price { font-size: 0.85rem; color: var(--gold); }
+  .cart-item-remove {
+    background: none; border: none; cursor: none;
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mid); transition: color 0.3s;
+  }
+  .cart-item-remove:hover { color: var(--dark); }
+  .cart-footer { margin-top: 32px; }
+  .cart-total {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--border);
+  }
+  .cart-total span:first-child { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .cart-total-price { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold); }
+  .checkout-btn {
+    width: 100%; padding: 18px; background: var(--dark); color: var(--cream);
+    border: none; cursor: none; font-family: 'Jost', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: background 0.3s;
+  }
+  .checkout-btn:hover { background: var(--gold); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex; gap: 12px; margin-bottom: 60px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 8px 20px; border: 1px solid var(--border);
+    background: transparent; cursor: none;
+    font-family: 'Jost', sans-serif; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid);
+    transition: all 0.3s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--dark); color: var(--cream); border-color: var(--dark);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 50vw; }
+    section { padding: 60px 24px; }
+    .about-section { grid-template-columns: 1fr; }
+    .about-visual { display: none; }
+    .features { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr 1fr; }
+    .cart-drawer { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">DRE<span>A</span>MIFY</a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#newsletter">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()">
+      Bag <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Handcrafted with intention</p>
+    <h1 class="hero-title">Jewelry for<br><em>quiet luxury</em></h1>
+    <p class="hero-sub">Each piece is made by hand, one at a time — slow craft in a fast world. Designed for the woman who notices detail.</p>
+    <a href="#collection" class="hero-cta">Shop the Collection →</a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-wrapper">
+      <div class="hero-ornament">◈</div>
+      <div class="hero-badge">
+        <span>✦</span>
+        <span>Handmade</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>Handcrafted with love</span>
+    <span class="gold">✦</span>
+    <span>Small batch production</span>
+    <span class="gold">✦</span>
+    <span>Sustainable materials</span>
+    <span class="gold">✦</span>
+    <span>Made to order</span>
+    <span class="gold">✦</span>
+    <span>Gift wrapping included</span>
+    <span class="gold">✦</span>
+    <span>Free shipping over $80</span>
+    <span class="gold">✦</span>
+    <span>Handcrafted with love</span>
+    <span class="gold">✦</span>
+    <span>Small batch production</span>
+    <span class="gold">✦</span>
+    <span>Sustainable materials</span>
+    <span class="gold">✦</span>
+    <span>Made to order</span>
+    <span class="gold">✦</span>
+    <span>Gift wrapping included</span>
+    <span class="gold">✦</span>
+    <span>Free shipping over $80</span>
+    <span class="gold">✦</span>
+  </div>
+</div>
+
+<!-- COLLECTION -->
+<section id="collection">
+  <p class="section-label">The Collection</p>
+  <h2 class="section-title">Pieces made to last</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+    <button class="filter-btn" onclick="filterProducts('rings', this)">Rings</button>
+    <button class="filter-btn" onclick="filterProducts('necklaces', this)">Necklaces</button>
+    <button class="filter-btn" onclick="filterProducts('earrings', this)">Earrings</button>
+    <button class="filter-btn" onclick="filterProducts('bracelets', this)">Keychains</button>
+  </div>
+  <div class="products-grid" id="productsGrid">
+    <!-- Products inserted by JS -->
+  </div>
+</section>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature">
+    <div class="feature-icon">✦</div>
+    <h3 class="feature-name">Handcrafted</h3>
+    <p class="feature-desc">Every piece is made entirely by hand. No machines, no shortcuts — only craft.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">◈</div>
+    <h3 class="feature-name">Ethically Sourced</h3>
+    <p class="feature-desc">We use recycled metals and ethically mined gemstones from trusted suppliers.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">⬦</div>
+    <h3 class="feature-name">Gift Ready</h3>
+    <p class="feature-desc">Every order arrives in our signature black box with handwritten note.</p>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div>
+    <p class="section-label about-label">The Story</p>
+    <h2 class="section-title about-title">Made by hand,<br>with meaning</h2>
+    <p class="about-text">DREAMIFY was born from a small studio and a deep love for slow making. I create each piece myself, pouring attention into every curve, every clasp, every stone setting. Jewelry isn't just decoration — it's memory, identity, intention.</p>
+    <p class="about-text">Each collection is kept small, so every customer receives something truly rare.</p>
+    <a href="#collection" class="about-link">Explore the pieces →</a>
+  </div>
+  <div class="about-visual">◈</div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" class="newsletter">
+  <span class="section-label">Stay in Touch</span>
+  <h2 class="section-title">New pieces, first</h2>
+  <p class="newsletter-sub">Join the list for new collections, behind-the-scenes, and early access.</p>
+  <div class="nl-form">
+    <input type="email" class="nl-input" placeholder="your@email.com">
+    <button class="nl-btn" onclick="subscribeNewsletter()">Subscribe</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="logo">DRE<span style="color:var(--gold)">A</span>MIFY</a>
+    <p class="footer-tagline">Handmade jewelry from a small studio. Crafted with intention, worn with love.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Shop</h4>
+    <ul>
+      <li><a href="#collection">All Jewelry</a></li>
+      <li><a href="#collection">Rings</a></li>
+      <li><a href="#collection">Necklaces</a></li>
+      <li><a href="#collection">Earrings</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Info</h4>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#">Care Guide</a></li>
+      <li><a href="#">Sizing</a></li>
+      <li><a href="#">Custom Orders</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Help</h4>
+    <ul>
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 DREAMIFY. All rights reserved.</p>
+    <p>Handmade with love ✦</p>
+  </div>
+</footer>
+
+<!-- CART OVERLAY & DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag</h2>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <p>Your bag is empty.</p>
+      <p style="margin-top:8px; font-size:0.75rem;">Add something beautiful.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <span class="cart-total-price" id="cartTotal">$0</span>
+    </div>
+    <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function goToCheckout() {
+  window.location.href = "checkout.html";
+}
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // NAV SCROLL
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // PRODUCTS DATA
+  const products = [
+    { id: 1, name: 'Resin Ring', material: 'Sterling Silver', price: 48, emoji: '💍', tag: 'New', category: 'rings', img: 'img/resin-ring.jpeg' },
+    { id: 2, name: 'Floral Oxidised Earrings', material: 'Bold florals', price: 64, emoji: '✨', tag: 'Bestseller', category: 'earrings', img: 'img/Floral Oxidised Earrings.jpeg' },
+    { id: 3, name: 'Teardrop Resin Pendant', material: '(Silver Chain', price: 86, emoji: '⭐', tag: null, category: 'necklaces', img: 'img/Teardrop-Resin-Pendant.jpeg' },
+    { id: 4, name: 'Rose Preservation earrings', material: 'Sterling Silver', price: 38, emoji: '🪨', tag: 'New', category: 'earrings', img: 'img/Rose Preservation in earrings.jpeg' },
+    { id: 5, name: 'Resin keychain', material: 'Hammered Brass', price: 72, emoji: '🟡', tag: null, category: 'bracelets', img: 'img/resin-keychain.jpeg' },
+    { id: 6, name: 'Celeste Ring', material: 'Rose Gold-filled', price: 56, emoji: '🌙', tag: 'Bestseller', category: 'rings', img: 'img/resin-ring2.jpeg' },
+  ];
+
+  let cart = [];
+  let activeFilter = 'all';
+
+  function renderProducts(filter = 'all') {
+    const grid = document.getElementById('productsGrid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+    grid.innerHTML = filtered.map((p, i) => `
+      <div class="product-card" data-category="${p.category}">
+        <div class="product-img">
+          ${p.tag ? `<span class="product-tag-badge">${p.tag}</span>` : ''}
+          <img src="${p.img}" alt="${p.name}" class="product-image">
+          <button class="quick-add" onclick="addToCart(${p.id})">Add to Bag</button>
+        </div>
+        <p class="product-name">${p.name}</p>
+        <p class="product-material">${p.material}</p>
+        <p class="product-price">$${p.price}</p>
+      </div>
+    `).join('');
+
+    // Re-bind cursor hover
+    grid.querySelectorAll('.product-card, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // Intersection observer for reveal
+    setTimeout(() => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.1 });
+      grid.querySelectorAll('.product-card').forEach(card => observer.observe(card));
+    }, 50);
+  }
+
+  function filterProducts(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderProducts(cat);
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(i => i.id === id);
+    if (existing) existing.qty++;
+    else cart.push({ ...product, qty: 1 });
+    updateCart();
+    showToast(`${product.name} added to bag`);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCart();
+    renderCartItems();
+  }
+
+  function updateCart() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('cartTotal').textContent = `$${total}`;
+    renderCartItems();
+  }
+
+  function renderCartItems() {
+    const el = document.getElementById('cartItems');
+    if (!cart.length) {
+      el.innerHTML = `<div class="cart-empty"><p>Your bag is empty.</p><p style="margin-top:8px;font-size:0.75rem;">Add something beautiful.</p></div>`;
+      return;
+    }
+    el.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-img">${item.emoji}</div>
+        <div class="cart-item-info">
+          <p class="cart-item-name">${item.name} ${item.qty > 1 ? `×${item.qty}` : ''}</p>
+          <p class="cart-item-material">${item.material}</p>
+          <div class="cart-item-bottom">
+            <span class="cart-item-price">$${item.price * item.qty}</span>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openCart() {
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartDrawer').classList.add('open');
+  }
+
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartDrawer').classList.remove('open');
+  }
+
+  function checkout() {
+    if (!cart.length) { showToast('Your bag is empty'); return; }
+    showToast('Redirecting to checkout...');
+    setTimeout(closeCart, 1500);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function subscribeNewsletter() {
+    const input = document.querySelector('.nl-input');
+    if (input.value && input.value.includes('@')) {
+      showToast('You\'re on the list ✦');
+      input.value = '';
+    } else {
+      showToast('Please enter a valid email');
+    }
+  }
+
+  // INIT
+  renderProducts();
+</script>
+</body>
+</html>
