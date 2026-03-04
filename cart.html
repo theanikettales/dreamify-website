@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bag — DREAMIFY</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --cream: #faf8f5;
+      --warm-white: #f5f2ed;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1714;
+      --mid: #6b6460;
+      --border: #e0dbd4;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      font-weight: 300;
+      cursor: none;
+      overflow-x: hidden
+    }
+
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width .3s, height .3s
+    }
+
+    .cursor.hover {
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: 1px solid var(--gold)
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 60px;
+      background: rgba(250, 248, 245, .95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--dark)
+    }
+
+    .logo span {
+      color: var(--gold)
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--mid);
+      font-size: .75rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      transition: color .3s
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--gold)
+    }
+
+    .page-wrapper {
+      padding-top: 120px;
+      min-height: 100vh;
+      opacity: 0;
+      animation: fadeUp .9s ease .1s forwards
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .page-header {
+      padding: 60px 60px 40px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .page-label {
+      font-size: .7rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1
+    }
+
+    .page-title em {
+      font-style: italic;
+      color: var(--gold)
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 0;
+      padding: 0 60px 80px;
+      align-items: start
+    }
+
+    .cart-items-section {
+      padding-right: 60px;
+      padding-top: 48px;
+      border-right: 1px solid var(--border)
+    }
+
+    .items-count {
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 32px
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 24px;
+      align-items: start;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp .6s ease forwards
+    }
+
+    .cart-item:nth-child(1) {
+      animation-delay: .05s
+    }
+
+    .cart-item:nth-child(2) {
+      animation-delay: .12s
+    }
+
+    .cart-item:nth-child(3) {
+      animation-delay: .19s
+    }
+
+    .item-img {
+      aspect-ratio: 3/4;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      overflow: hidden
+    }
+
+    .item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400
+    }
+
+    .item-material {
+      font-size: .73rem;
+      color: var(--mid)
+    }
+
+    .item-price {
+      font-size: .88rem;
+      color: var(--dark);
+      margin-top: 4px
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px
+    }
+
+    .qty-btn {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--border);
+      background: none;
+      cursor: none;
+      font-size: 1rem;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, color .2s
+    }
+
+    .qty-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .qty-val {
+      font-size: .85rem;
+      min-width: 20px;
+      text-align: center
+    }
+
+    .item-remove {
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      background: none;
+      border: none;
+      cursor: none;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .2s;
+      padding: 0;
+      margin-top: 4px;
+      display: block
+    }
+
+    .item-remove:hover {
+      color: var(--gold)
+    }
+
+    .item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end
+    }
+
+    .item-total {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem
+    }
+
+    .empty-state {
+      padding: 80px 0;
+      text-align: center;
+      display: none
+    }
+
+    .empty-state.visible {
+      display: block
+    }
+
+    .empty-ornament {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      color: var(--gold-light);
+      margin-bottom: 24px
+    }
+
+    .empty-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      margin-bottom: 12px
+    }
+
+    .empty-sub {
+      font-size: .8rem;
+      color: var(--mid);
+      margin-bottom: 32px
+    }
+
+    .shop-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--dark);
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 6px;
+      transition: gap .3s, color .3s
+    }
+
+    .shop-link:hover {
+      gap: 20px;
+      color: var(--gold)
+    }
+
+    .summary-section {
+      padding-left: 60px;
+      padding-top: 48px;
+      position: sticky;
+      top: 100px
+    }
+
+    .summary-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .promo-wrap {
+      display: flex;
+      margin-bottom: 28px
+    }
+
+    .promo-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-right: none;
+      background: transparent;
+      font-family: 'Jost', sans-serif;
+      font-size: .78rem;
+      color: var(--dark);
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .promo-input:focus {
+      border-color: var(--gold)
+    }
+
+    .promo-input::placeholder {
+      color: var(--mid)
+    }
+
+    .promo-btn {
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      border-left: none;
+      background: var(--dark);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .3s
+    }
+
+    .promo-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold)
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .8rem;
+      color: var(--mid);
+      margin-bottom: 14px
+    }
+
+    .discount-val {
+      color: #5a9e6a
+    }
+
+    .summary-line.total {
+      font-size: 1rem;
+      color: var(--dark);
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      margin-top: 6px
+    }
+
+    .total-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem
+    }
+
+    .summary-note {
+      font-size: .68rem;
+      color: var(--mid);
+      margin: 8px 0 28px;
+      text-align: center
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--dark);
+      color: var(--cream);
+      border: none;
+      cursor: none;
+      font-family: 'Jost', sans-serif;
+      font-size: .78rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      transition: background .3s, letter-spacing .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px
+    }
+
+    .checkout-btn:hover {
+      background: var(--gold);
+      letter-spacing: .28em
+    }
+
+    .checkout-btn:disabled {
+      opacity: .4;
+      pointer-events: none
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid)
+    }
+
+    .payment-icons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap
+    }
+
+    .payment-icon {
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      font-size: .62rem;
+      letter-spacing: .08em;
+      color: var(--mid);
+      border-radius: 2px
+    }
+
+    .suggestions-section {
+      padding: 60px 60px 80px;
+      border-top: 1px solid var(--border)
+    }
+
+    .suggestions-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin-bottom: 36px
+    }
+
+    .suggestions-title em {
+      font-style: italic;
+      color: var(--gold)
+    }
+
+    .suggestions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px
+    }
+
+    .suggestion-card {
+      cursor: none
+    }
+
+    .suggestion-img {
+      aspect-ratio: 3/4;
+      background: var(--warm-white);
+      margin-bottom: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem
+    }
+
+    .suggestion-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s
+    }
+
+    .suggestion-card:hover .suggestion-img img {
+      transform: scale(1.05)
+    }
+
+    .suggestion-name {
+      font-size: .8rem;
+      margin-bottom: 4px
+    }
+
+    .suggestion-price {
+      font-size: .75rem;
+      color: var(--mid);
+      margin-bottom: 10px
+    }
+
+    .suggestion-add {
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: none;
+      border: none;
+      cursor: none;
+      padding: 0;
+      transition: letter-spacing .3s;
+      font-family: 'Jost', sans-serif
+    }
+
+    .suggestion-add:hover {
+      letter-spacing: .22em
+    }
+
+    .footer-mini {
+      border-top: 1px solid var(--border);
+      padding: 24px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .footer-mini p {
+      font-size: .7rem;
+      color: var(--mid)
+    }
+
+    .footer-mini a {
+      color: var(--mid);
+      text-decoration: none;
+      transition: color .2s
+    }
+
+    .footer-mini a:hover {
+      color: var(--gold)
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--dark);
+      color: var(--cream);
+      padding: 14px 28px;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    @media(max-width:1024px) {
+      .cart-layout {
+        grid-template-columns: 1fr
+      }
+
+      .cart-items-section {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 48px
+      }
+
+      .summary-section {
+        padding-left: 0;
+        position: static
+      }
+
+      .suggestions-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:600px) {
+      nav {
+        padding: 20px 24px
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .page-header,
+      .cart-layout,
+      .suggestions-section,
+      .footer-mini {
+        padding-left: 24px;
+        padding-right: 24px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cursor" id="cursor"></div>
+  <nav>
+    <a href="index.html" class="logo">DRE<span>A</span>MIFY</a>
+    <ul class="nav-links">
+      <li><a href="index.html#collection">Collection</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="cart.html" class="active">My Bag</a></li>
+    </ul>
+  </nav>
+  <div class="page-wrapper">
+    <div class="page-header">
+      <p class="page-label">Shopping</p>
+      <h1 class="page-title">My <em>Bag</em></h1>
+    </div>
+    <div class="cart-layout">
+      <div class="cart-items-section">
+        <p class="items-count" id="itemsCount">0 items</p>
+        <div id="cartItemsList"></div>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-ornament">✦</div>
+          <h2 class="empty-title">Your bag is empty</h2>
+          <p class="empty-sub">Discover something beautiful to wear today.</p>
+          <a href="index.html#collection" class="shop-link">Browse Collection →</a>
+        </div>
+      </div>
+      <div class="summary-section">
+        <h2 class="summary-title">Order Summary</h2>
+        <div class="promo-wrap">
+          <input type="text" class="promo-input" placeholder="Promo code (try DREAMIFY10)" id="promoInput">
+          <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+        <div class="summary-line"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+        <div class="summary-line" id="discountLine" style="display:none"><span>Discount</span><span id="discountAmt"
+            class="discount-val">−₹0</span></div>
+        <div class="summary-line"><span>Shipping</span><span id="shippingCost">Free</span></div>
+        <div class="summary-line total"><span>Total</span><span class="total-amount" id="totalAmount">₹0</span></div>
+        <p class="summary-note">Taxes included · Free shipping over ₹999</p>
+        <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()">Proceed to Checkout →</button>
+        <p class="secure-note">🔒 Secure checkout</p>
+        <div class="payment-icons">
+          <span class="payment-icon">UPI</span><span class="payment-icon">Visa</span>
+          <span class="payment-icon">Mastercard</span><span class="payment-icon">Paytm</span>
+          <span class="payment-icon">COD</span>
+        </div>
+      </div>
+    </div>
+    <div class="suggestions-section">
+      <h2 class="suggestions-title">You may also <em>love</em></h2>
+      <div class="suggestions-grid" id="suggestionsGrid"></div>
+    </div>
+    <div class="footer-mini">
+      <p>© 2025 DREAMIFY. Handmade with love ✦</p>
+      <p><a href="#">Shipping Policy</a> · <a href="#">Returns</a> · <a href="#">Contact</a></p>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px' });
+    document.querySelectorAll('a,button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+    const products = [
+      { id: 1, name: 'Resin Ring', material: 'Sterling Silver', price: 599, emoji: '💍', img: 'img/resin-ring.jpeg' },
+      { id: 2, name: 'Floral Oxidised Earrings', material: 'Bold florals', price: 1099, emoji: '✨', img: 'img/Floral Oxidised Earrings.jpeg' },
+      { id: 3, name: 'Teardrop Resin Pendant', material: 'Silver Chain', price: 699, emoji: '⭐', img: 'img/Teardrop-Resin-Pendant.jpeg' },
+      { id: 4, name: 'Rose Preservation Earrings', material: 'Sterling Silver', price: 1299, emoji: '🌸', img: 'img/Rose Preservation in earrings.jpeg' },
+      { id: 5, name: 'Resin Keychain', material: 'Hammered Brass', price: 320, emoji: '🟡', img: 'img/resin-keychain.jpeg' },
+      { id: 6, name: 'Celeste Ring', material: 'Rose Gold-filled', price: 499, emoji: '🌙', img: 'img/resin-ring2.jpeg' },
+    ];
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let discount = parseFloat(localStorage.getItem('discount') || '0');
+    function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)) }
+    function updateQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty < 1) cart = cart.filter(i => i.id !== id);
+      saveCart(); renderAll();
+    }
+    function removeItem(id) { cart = cart.filter(i => i.id !== id); saveCart(); renderAll(); showToast('Item removed') }
+    function renderAll() { renderCartItems(); renderSummary(); renderSuggestions() }
+    function renderCartItems() {
+      const list = document.getElementById('cartItemsList');
+      const empty = document.getElementById('emptyState');
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('itemsCount').textContent = `${count} item${count !== 1 ? 's' : ''}`;
+      if (!cart.length) { list.innerHTML = ''; empty.classList.add('visible'); document.getElementById('checkoutBtn').disabled = true; return }
+      empty.classList.remove('visible');
+      document.getElementById('checkoutBtn').disabled = false;
+      list.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="item-img"><img src="${item.img}" alt="${item.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:2rem>${item.emoji}</span>'"></div>
+      <div class="item-details">
+        <p class="item-name">${item.name}</p>
+        <p class="item-material">${item.material}</p>
+        <p class="item-price">₹${item.price} each</p>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="updateQty(${item.id},-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty(${item.id},1)">+</button>
+        </div>
+        <button class="item-remove" onclick="removeItem(${item.id})">Remove</button>
+      </div>
+      <div class="item-right"><span class="item-total">₹${item.price * item.qty}</span></div>
+    </div>`).join('');
+      list.querySelectorAll('button').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+    function renderSummary() {
+      const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const da = Math.round(sub * discount);
+      const sh = sub > 999 || sub === 0 ? 0 : 99;
+      const tot = sub - da + sh;
+      document.getElementById('subtotal').textContent = '₹' + sub;
+      document.getElementById('shippingCost').textContent = sh === 0 ? 'Free' : '₹' + sh;
+      document.getElementById('totalAmount').textContent = '₹' + tot;
+      const dl = document.getElementById('discountLine');
+      if (da > 0) { dl.style.display = 'flex'; document.getElementById('discountAmt').textContent = '−₹' + da }
+      else dl.style.display = 'none';
+    }
+    function renderSuggestions() {
+      const ids = cart.map(i => i.id);
+      const suggs = products.filter(p => !ids.includes(p.id)).slice(0, 4);
+      const grid = document.getElementById('suggestionsGrid');
+      grid.innerHTML = suggs.map(p => `
+    <div class="suggestion-card">
+      <div class="suggestion-img"><img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:2.5rem>${p.emoji}</span>'"></div>
+      <p class="suggestion-name">${p.name}</p>
+      <p class="suggestion-price">₹${p.price}</p>
+      <button class="suggestion-add" onclick="addSuggestion(${p.id})">+ Add to Bag</button>
+    </div>`).join('');
+      grid.querySelectorAll('button').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+    function addSuggestion(id) {
+      const p = products.find(x => x.id === id);
+      const ex = cart.find(i => i.id === id);
+      if (ex) ex.qty++; else cart.push({ ...p, qty: 1 });
+      saveCart(); renderAll(); showToast(`${p.name} added to bag`);
+    }
+    function applyPromo() {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      if (code === 'DREAMIFY10') { discount = .10; showToast('10% discount applied ✦') }
+      else if (code === 'LOVE20') { discount = .20; showToast('20% discount applied ✦') }
+      else { discount = 0; showToast('Invalid promo code') }
+      localStorage.setItem('discount', discount); renderSummary();
+    }
+    function goToCheckout() {
+      if (!cart.length) return;
+      saveCart(); localStorage.setItem('discount', discount);
+      window.location.href = 'checkout.html';
+    }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    renderAll();
+  </script>
+</body>
+
+</html>
