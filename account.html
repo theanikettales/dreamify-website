@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — DREAMIFY</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #faf8f5;
+    --warm-white: #f5f2ed;
+    --gold: #c9a96e;
+    --gold-light: #e8d5b0;
+    --dark: #1a1714;
+    --mid: #6b6460;
+    --border: #e0dbd4;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-weight: 300;
+    cursor: none;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    width: 8px; height: 8px; background: var(--gold);
+    border-radius: 50%; transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+  }
+  .cursor.hover { width: 40px; height: 40px; background: transparent; border: 1px solid var(--gold); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    background: rgba(250,248,245,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; letter-spacing: 0.3em;
+    text-transform: uppercase; text-decoration: none; color: var(--dark);
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--mid); font-size: 0.75rem;
+    letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-right { display: flex; gap: 24px; align-items: center; }
+  .sign-out-btn {
+    background: none; border: none; cursor: none;
+    font-family: 'Jost', sans-serif; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--mid); transition: color 0.3s;
+  }
+  .sign-out-btn:hover { color: var(--gold); }
+
+  /* PAGE WRAPPER */
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 120px 60px 80px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 60px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards;
+  }
+  .page-label {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.1;
+  }
+  .page-title em { font-style: italic; color: var(--gold); }
+  .page-subtitle { margin-top: 10px; font-size: 0.82rem; color: var(--mid); }
+
+  /* ACCOUNT LAYOUT */
+  .account-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 60px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  /* SIDEBAR */
+  .sidebar { }
+  .user-card {
+    padding: 24px;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    background: var(--warm-white);
+  }
+  .user-avatar {
+    width: 52px; height: 52px;
+    background: var(--dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .user-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; margin-bottom: 4px;
+  }
+  .user-email { font-size: 0.72rem; color: var(--mid); }
+  .user-since { font-size: 0.65rem; color: var(--border); margin-top: 8px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .sidebar-nav { list-style: none; }
+  .sidebar-nav li { border-bottom: 1px solid var(--border); }
+  .sidebar-nav li:first-child { border-top: 1px solid var(--border); }
+  .sidebar-nav a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--mid); transition: color 0.3s;
+    cursor: none;
+  }
+  .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--dark); }
+  .sidebar-nav a.active { color: var(--gold); }
+  .sidebar-nav .nav-icon { font-size: 0.9rem; width: 18px; text-align: center; }
+  .sidebar-nav .nav-badge {
+    margin-left: auto;
+    background: var(--gold); color: white;
+    font-size: 0.6rem; padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  /* CONTENT SECTIONS */
+  .content-section { display: none; }
+  .content-section.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 32px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-head h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300;
+  }
+  .section-head h2 em { font-style: italic; color: var(--gold); }
+  .section-label-sm {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 4px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-bottom: 40px;
+  }
+  .stat-card {
+    padding: 24px; border: 1px solid var(--border);
+    background: var(--warm-white);
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid);
+  }
+
+  /* ORDER CARDS */
+  .orders-list { display: flex; flex-direction: column; gap: 20px; }
+  .order-card {
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    transition: border-color 0.3s;
+  }
+  .order-card:hover { border-color: var(--gold-light); }
+  .order-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .order-id {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 4px;
+  }
+  .order-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+  }
+  .order-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .status-delivered { background: rgba(39,174,96,0.1); color: #27ae60; }
+  .status-shipped { background: rgba(201,169,110,0.12); color: var(--gold); }
+  .status-processing { background: rgba(107,100,96,0.1); color: var(--mid); }
+  .status-cancelled { background: rgba(192,57,43,0.08); color: #c0392b; }
+  .status-dot {
+    width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+  }
+  .order-items {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .order-item-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; background: var(--warm-white);
+    font-size: 0.72rem;
+  }
+  .order-item-emoji { font-size: 1rem; }
+  .order-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .order-total-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); }
+  .order-total-amount { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); }
+  .order-actions { display: flex; gap: 12px; }
+  .btn-sm {
+    padding: 8px 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: none; transition: all 0.3s;
+  }
+  .btn-outline { border: 1px solid var(--border); background: transparent; color: var(--mid); }
+  .btn-outline:hover { border-color: var(--dark); color: var(--dark); }
+  .btn-dark { border: 1px solid var(--dark); background: var(--dark); color: var(--cream); }
+  .btn-dark:hover { background: var(--gold); border-color: var(--gold); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center; padding: 80px 40px;
+    border: 1px dashed var(--border);
+  }
+  .empty-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; color: var(--gold-light); margin-bottom: 20px;
+  }
+  .empty-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 300; margin-bottom: 10px;
+  }
+  .empty-text { font-size: 0.78rem; color: var(--mid); line-height: 1.8; margin-bottom: 28px; }
+  .btn-shop {
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dark); border-bottom: 1px solid var(--gold);
+    padding-bottom: 4px; transition: color 0.3s, gap 0.3s;
+    cursor: none;
+  }
+  .btn-shop:hover { color: var(--gold); gap: 16px; }
+
+  /* PROFILE FORM */
+  .profile-form { max-width: 520px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .input-group { margin-bottom: 24px; }
+  .input-label {
+    display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--mid); margin-bottom: 8px;
+  }
+  .input-field {
+    width: 100%; padding: 13px 16px;
+    border: 1px solid var(--border); background: transparent;
+    font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--dark);
+    outline: none; transition: border-color 0.3s;
+  }
+  .input-field:focus { border-color: var(--gold); }
+  .input-field:disabled { background: var(--warm-white); color: var(--mid); }
+  .btn-save {
+    padding: 14px 36px; background: var(--dark); color: var(--cream);
+    border: none; cursor: none; font-family: 'Jost', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: background 0.3s;
+  }
+  .btn-save:hover { background: var(--gold); }
+
+  /* ADDRESS */
+  .address-card {
+    border: 1px solid var(--border); padding: 24px;
+    margin-bottom: 16px; position: relative;
+  }
+  .address-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--dark); color: var(--cream); padding: 3px 8px;
+  }
+  .address-name { font-size: 0.85rem; font-weight: 400; margin-bottom: 6px; }
+  .address-lines { font-size: 0.78rem; color: var(--mid); line-height: 1.8; }
+  .address-actions { display: flex; gap: 12px; margin-top: 16px; }
+
+  /* WISHLIST */
+  .wishlist-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  .wishlist-item {
+    border: 1px solid var(--border); transition: border-color 0.3s;
+    cursor: none;
+  }
+  .wishlist-item:hover { border-color: var(--gold-light); }
+  .wishlist-img {
+    aspect-ratio: 3/4; background: var(--warm-white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+  }
+  .wishlist-info { padding: 14px 16px; }
+  .wishlist-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; margin-bottom: 4px;
+  }
+  .wishlist-price { font-size: 0.78rem; color: var(--gold); margin-bottom: 12px; }
+  .btn-add-bag {
+    width: 100%; padding: 9px;
+    background: var(--dark); color: var(--cream); border: none;
+    cursor: none; font-family: 'Jost', sans-serif;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+    transition: background 0.3s;
+  }
+  .btn-add-bag:hover { background: var(--gold); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px;
+    background: var(--dark); color: var(--cream);
+    padding: 16px 24px; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.4s ease; z-index: 9998;
+    border-left: 2px solid var(--gold);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ORDER TIMELINE */
+  .order-timeline {
+    display: flex; gap: 0; margin-bottom: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .timeline-step {
+    flex: 1; padding: 10px 14px; text-align: center;
+    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mid); border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .timeline-step:last-child { border-right: none; }
+  .timeline-step.done { background: var(--dark); color: var(--cream); }
+  .timeline-step.current { background: rgba(201,169,110,0.12); color: var(--gold); }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .page-wrap { padding: 100px 24px 60px; }
+    .account-layout { grid-template-columns: 1fr; }
+    .sidebar { display: flex; flex-direction: column; }
+    .sidebar-nav { display: flex; overflow-x: auto; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sidebar-nav li { border: none; border-right: 1px solid var(--border); white-space: nowrap; }
+    .stats-row { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">DRE<span>A</span>MIFY</a>
+  <ul class="nav-links">
+    <li><a href="index.html#collection">Collection</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#newsletter">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="page-label">My Account</p>
+    <h1 class="page-title">Hello, <em id="user-greeting">there</em></h1>
+    <p class="page-subtitle" id="user-email-display"></p>
+  </div>
+
+  <!-- ACCOUNT LAYOUT -->
+  <div class="account-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="user-card">
+        <div class="user-avatar" id="avatar-initials">–</div>
+        <p class="user-name" id="sidebar-name"></p>
+        <p class="user-email" id="sidebar-email"></p>
+        <p class="user-since" id="sidebar-since"></p>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active" onclick="showSection('orders', this)"><span class="nav-icon">◈</span> Orders <span class="nav-badge" id="order-badge">0</span></a></li>
+        <li><a href="#" onclick="showSection('wishlist', this)"><span class="nav-icon">✦</span> Wishlist</a></li>
+        <li><a href="#" onclick="showSection('profile', this)"><span class="nav-icon">⬦</span> Profile</a></li>
+        <li><a href="#" onclick="showSection('addresses', this)"><span class="nav-icon">◻</span> Addresses</a></li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+      <!-- ORDERS -->
+      <div class="content-section active" id="section-orders">
+        <div class="section-head">
+          <div>
+            <p class="section-label-sm">Purchase History</p>
+            <h2>My <em>Orders</em></h2>
+          </div>
+          <a href="index.html" class="btn-shop">Shop More →</a>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-total-orders">0</div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-total-spent">₹0</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-delivered">0</div>
+            <div class="stat-label">Delivered</div>
+          </div>
+        </div>
+
+        <div id="orders-container">
+          <!-- orders rendered here -->
+        </div>
+      </div>
+
+      <!-- WISHLIST -->
+      <div class="content-section" id="section-wishlist">
+        <div class="section-head">
+          <div>
+            <p class="section-label-sm">Saved Items</p>
+            <h2>My <em>Wishlist</em></h2>
+          </div>
+        </div>
+        <div class="wishlist-grid" id="wishlist-container"></div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="content-section" id="section-profile">
+        <div class="section-head">
+          <div>
+            <p class="section-label-sm">Account Details</p>
+            <h2>My <em>Profile</em></h2>
+          </div>
+        </div>
+
+        <div class="profile-form">
+          <div class="form-row">
+            <div class="input-group">
+              <label class="input-label">First Name</label>
+              <input type="text" class="input-field" id="profile-first" placeholder="First name">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Last Name</label>
+              <input type="text" class="input-field" id="profile-last" placeholder="Last name">
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Email Address</label>
+            <input type="email" class="input-field" id="profile-email" disabled>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Phone Number</label>
+            <input type="tel" class="input-field" id="profile-phone" placeholder="+91 00000 00000">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Date of Birth</label>
+            <input type="date" class="input-field" id="profile-dob">
+          </div>
+          <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+        </div>
+      </div>
+
+      <!-- ADDRESSES -->
+      <div class="content-section" id="section-addresses">
+        <div class="section-head">
+          <div>
+            <p class="section-label-sm">Saved Locations</p>
+            <h2>My <em>Addresses</em></h2>
+          </div>
+          <button class="btn-sm btn-dark" onclick="showToast('Address form coming soon ✦')">+ Add New</button>
+        </div>
+
+        <div id="addresses-container">
+          <div class="address-card">
+            <span class="address-badge">Default</span>
+            <p class="address-name" id="addr-name">—</p>
+            <p class="address-lines" id="addr-lines">No address saved yet.<br>Add your shipping address above.</p>
+            <div class="address-actions">
+              <button class="btn-sm btn-outline" onclick="showToast('Edit coming soon ✦')">Edit</button>
+              <button class="btn-sm btn-outline" onclick="showToast('Removed ✦')">Remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  function bindCursor() {
+    document.querySelectorAll('a, button, .wishlist-item, .order-card, .sidebar-nav a').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  }
+
+  // SECTION NAVIGATION
+  function showSection(id, link) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+    if (link) link.classList.add('active');
+    event.preventDefault();
+  }
+
+  // TOAST
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // SAMPLE / DEMO ORDERS (merged with real orders from localStorage)
+  const demoOrders = [
+    {
+      id: 'DRM-20240315-001',
+      date: '15 March 2025',
+      status: 'delivered',
+      timeline: ['Ordered', 'Packed', 'Shipped', 'Delivered'],
+      currentStep: 3,
+      items: [
+        { name: 'Resin Ring', emoji: '💍', qty: 1, price: 599 },
+        { name: 'Teardrop Pendant', emoji: '⭐', qty: 1, price: 699 }
+      ],
+      total: 1298
+    },
+    {
+      id: 'DRM-20240401-002',
+      date: '1 April 2025',
+      status: 'shipped',
+      timeline: ['Ordered', 'Packed', 'Shipped', 'Delivered'],
+      currentStep: 2,
+      items: [
+        { name: 'Floral Oxidised Earrings', emoji: '✨', qty: 1, price: 1099 }
+      ],
+      total: 1099
+    },
+    {
+      id: 'DRM-20240410-003',
+      date: '10 April 2025',
+      status: 'processing',
+      timeline: ['Ordered', 'Packed', 'Shipped', 'Delivered'],
+      currentStep: 0,
+      items: [
+        { name: 'Rose Preservation Earrings', emoji: '🪨', qty: 1, price: 1299 },
+        { name: 'Resin Keychain', emoji: '🟡', qty: 2, price: 640 }
+      ],
+      total: 1939
+    }
+  ];
+
+  const wishlistItems = [
+    { name: 'Celeste Ring', emoji: '🌙', price: 499, material: 'Rose Gold-filled' },
+    { name: 'Resin Ring', emoji: '💍', price: 599, material: 'Sterling Silver' },
+    { name: 'Floral Earrings', emoji: '✨', price: 1099, material: 'Bold Florals' }
+  ];
+
+  // LOAD USER
+  function loadUser() {
+    const raw = localStorage.getItem('dreamify_current_user');
+    if (!raw) {
+      window.location.href = 'auth.html';
+      return null;
+    }
+    return JSON.parse(raw);
+  }
+
+  function getFullUser(email) {
+    const users = JSON.parse(localStorage.getItem('dreamify_users') || '[]');
+    return users.find(u => u.email === email) || null;
+  }
+
+  function initAccount() {
+    const user = loadUser();
+    if (!user) return;
+
+    const fullUser = getFullUser(user.email);
+    const nameParts = user.name.split(' ');
+    const firstName = nameParts[0];
+    const initials = nameParts.map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+    // Header
+    document.getElementById('user-greeting').textContent = firstName;
+    document.getElementById('user-email-display').textContent = user.email;
+
+    // Sidebar
+    document.getElementById('sidebar-name').textContent = user.name;
+    document.getElementById('sidebar-email').textContent = user.email;
+    document.getElementById('avatar-initials').textContent = initials;
+    if (fullUser && fullUser.joined) {
+      const d = new Date(fullUser.joined);
+      document.getElementById('sidebar-since').textContent = 'Member since ' + d.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
+
+    // Profile form
+    document.getElementById('profile-first').value = nameParts[0] || '';
+    document.getElementById('profile-last').value = nameParts.slice(1).join(' ') || '';
+    document.getElementById('profile-email').value = user.email;
+    document.getElementById('addr-name').textContent = user.name;
+
+    // Get user orders from localStorage OR use demo
+    const userOrders = fullUser && fullUser.orders && fullUser.orders.length > 0
+      ? fullUser.orders : demoOrders;
+
+    renderOrders(userOrders);
+    renderWishlist();
+    renderStats(userOrders);
+
+    document.getElementById('order-badge').textContent = userOrders.length;
+
+    bindCursor();
+  }
+
+  function renderStats(orders) {
+    const total = orders.length;
+    const spent = orders.reduce((s, o) => s + o.total, 0);
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+
+    document.getElementById('stat-total-orders').textContent = total;
+    document.getElementById('stat-total-spent').textContent = '₹' + spent.toLocaleString();
+    document.getElementById('stat-delivered').textContent = delivered;
+  }
+
+  function renderOrders(orders) {
+    const container = document.getElementById('orders-container');
+
+    if (!orders || orders.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-ornament">◈</div>
+          <h3 class="empty-title">No orders yet</h3>
+          <p class="empty-text">Your purchase history will appear here.<br>Explore our collection and find something beautiful.</p>
+          <a href="index.html" class="btn-shop">Explore Collection →</a>
+        </div>`;
+      return;
+    }
+
+    const statusMeta = {
+      delivered: { label: 'Delivered', cls: 'status-delivered' },
+      shipped: { label: 'Shipped', cls: 'status-shipped' },
+      processing: { label: 'Processing', cls: 'status-processing' },
+      cancelled: { label: 'Cancelled', cls: 'status-cancelled' }
+    };
+
+    container.innerHTML = `<div class="orders-list">` + orders.map(order => {
+      const meta = statusMeta[order.status] || statusMeta.processing;
+      const timelineHTML = order.timeline ? `
+        <div class="order-timeline">
+          ${order.timeline.map((step, i) => `
+            <div class="timeline-step ${i < order.currentStep ? 'done' : i === order.currentStep ? 'current' : ''}">${step}</div>
+          `).join('')}
+        </div>` : '';
+
+      return `
+        <div class="order-card">
+          <div class="order-top">
+            <div>
+              <p class="order-id">${order.id}</p>
+              <p class="order-date">${order.date}</p>
+            </div>
+            <span class="order-status ${meta.cls}">
+              <span class="status-dot"></span>${meta.label}
+            </span>
+          </div>
+          ${timelineHTML}
+          <div class="order-items">
+            ${order.items.map(item => `
+              <div class="order-item-chip">
+                <span class="order-item-emoji">${item.emoji}</span>
+                <span>${item.name}${item.qty > 1 ? ' ×' + item.qty : ''}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="order-bottom">
+            <div>
+              <p class="order-total-label">Order Total</p>
+              <p class="order-total-amount">₹${order.total.toLocaleString()}</p>
+            </div>
+            <div class="order-actions">
+              <button class="btn-sm btn-outline" onclick="showToast('Invoice downloading... ✦')">Invoice</button>
+              ${order.status === 'delivered' ? `<button class="btn-sm btn-dark" onclick="showToast('Review submitted ✦')">Leave Review</button>` : `<button class="btn-sm btn-outline" onclick="showToast('Tracking info sent ✦')">Track Order</button>`}
+            </div>
+          </div>
+        </div>`;
+    }).join('') + `</div>`;
+
+    bindCursor();
+  }
+
+  function renderWishlist() {
+    const container = document.getElementById('wishlist-container');
+    container.innerHTML = wishlistItems.map(item => `
+      <div class="wishlist-item">
+        <div class="wishlist-img">${item.emoji}</div>
+        <div class="wishlist-info">
+          <p class="wishlist-name">${item.name}</p>
+          <p class="wishlist-price">₹${item.price}</p>
+          <button class="btn-add-bag" onclick="showToast('${item.name} added to bag ✦')">Add to Bag</button>
+        </div>
+      </div>
+    `).join('');
+    bindCursor();
+  }
+
+  function saveProfile() {
+    const first = document.getElementById('profile-first').value.trim();
+    const last = document.getElementById('profile-last').value.trim();
+    if (!first) { showToast('Please enter your first name'); return; }
+
+    const user = loadUser();
+    const users = JSON.parse(localStorage.getItem('dreamify_users') || '[]');
+    const idx = users.findIndex(u => u.email === user.email);
+    if (idx !== -1) {
+      users[idx].name = first + (last ? ' ' + last : '');
+      localStorage.setItem('dreamify_users', JSON.stringify(users));
+    }
+    const updatedUser = { ...user, name: first + (last ? ' ' + last : '') };
+    localStorage.setItem('dreamify_current_user', JSON.stringify(updatedUser));
+
+    showToast('Profile updated ✦');
+    document.getElementById('user-greeting').textContent = first;
+    document.getElementById('sidebar-name').textContent = updatedUser.name;
+    document.getElementById('avatar-initials').textContent = (first[0] + (last ? last[0] : '')).toUpperCase();
+  }
+
+  function signOut() {
+    localStorage.removeItem('dreamify_current_user');
+    showToast('Signed out. See you soon ✦');
+    setTimeout(() => window.location.href = 'auth.html', 1200);
+  }
+
+  // INIT
+  initAccount();
+</script>
+
+</body>
+</html>
